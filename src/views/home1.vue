@@ -3,21 +3,17 @@
     <router-view></router-view>
     <div class="tabbar"></div>
     <div class="home-tabbar">
-      <router-link tag="div" to="/home/examine">
+      <router-link tag="div" to="/home1/first1">
         <div><van-icon name="home-o" /></div>
         <div>首页</div>
       </router-link>
-      <router-link tag="div" to='/home/item'>
+      <router-link tag="div" to='/home1/paper1'>
         <div><van-icon name="bars" /></div>
-        <div>班级错题汇总</div>
+        <div>试卷</div>
       </router-link>
-      <router-link tag="div" to='/home/first'>
-        <div><van-icon name="search" /></div>
-        <div>重点关注学生</div>
-      </router-link>
-      <router-link tag="div" to='/home/me'>
+      <router-link tag="div" to='/home1/me1'>
         <div><van-icon name="contact" /></div>
-        <div>个人中心</div>
+        <div>我的</div>
       </router-link>
     </div>
   </div>
@@ -27,7 +23,7 @@
 export default {
   data() {
     return {
-      active: 0,
+      
     }
   },
 }
@@ -62,5 +58,16 @@ export default {
 }
 .tabbar{
   height: 66px;
+}
+#me >>> .van-cell{
+  background: #9960e3;
+  color: #fff;
+}
+#me >>> .van-cell__right-icon{
+  color: #fff;
+}
+#me >>> .van-collapse-item__content{
+  background: #aa77ed;
+  color: #fff;
 }
 </style>
