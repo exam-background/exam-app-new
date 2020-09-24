@@ -10,7 +10,6 @@
     <div class="examine-img"><h3>{{papers.name}}</h3></div>
     <div class="examine-text">
       <div>开始时间:{{papers.papersStartDate}}</div>
-      <div>剩余时间:<van-count-down :time="time" @finish="over"/></div>
       <div class="con_tag">
           <van-tag size="large" class="tag" type="primary" v-if="papers.type == 0">就业训练</van-tag>
           <van-tag size="large" class="tag" type="primary" v-else>技术训练</van-tag>
@@ -19,20 +18,25 @@
     </div>
     <div class="examine-body">
       <div v-for="(item,index) in papers.papersTitleList" :key="index" class="examine-body-type">
-        <div>{{index+1}}.{{item.title}}({{item.setScore}}分)</div>
+        <div>{{index+1}}.{{item.title}}({{item.setScore}}/{{papers.papersUserResultList[index].mark}}分)<span style="margin-left:5px;"></span></div>
         <div v-if="item.type == 1">
-            <textarea class="txt1" v-model="insertPapers[index].userExercise"></textarea>
+            <textarea class="txt1" v-model="insertPapers[index].userExercise" disabled></textarea>
         </div>
         <div v-else>
           <van-radio-group style="margin:5px 0px;padding:5px;" v-model="insertPapers[index].userExercise" direction="horizontal" v-for="(papersExercises, papersExercisesIndex) in item.papersExercises" :key="papersExercisesIndex">
-              <van-radio :name="papersExercises.content" style="height:40px;"><font size=2>{{papersExercises.orderNum}}：{{papersExercises.content}}</font></van-radio>
+              <van-radio disabled :name="papersExercises.content" style="height:40px;"><font size=2>{{papersExercises.orderNum}}：{{papersExercises.content}}</font></van-radio>
           </van-radio-group>
+        </div>
+        <div style="margin-top:20px;"><h4>正确答案：</h4></div>
+        <div style="width:100%;height:100px;overflow:auto;border:1px solid #f0f0f0;">
+            <div v-html="insertPapers[index].standardAnswer">
+
+            </div>
         </div>
       </div>
     </div>
     <div class="button">
-      <button @click="submitPapers" v-if="timeOver">交卷</button>
-      <button disabled v-else>交卷</button>
+      <button @click="submitPapers">返回</button>
     </div>
   </div>
 </template>
@@ -42,32 +46,8 @@ import { Dialog } from 'vant';
 export default {
   data() {
     return {
-      list:[
-        {
-          name:'1.如何在Spring Boot启动的时候运行少量特定的代码(10分)',
-
-        },
-        {
-          name:'1.如何在Spring Boot启动的时候运行少量特定的代码(10分)',
-
-        },
-        {
-          name:'1.如何在Spring Boot启动的时候运行少量特定的代码(10分)',
-
-        },
-        {
-          name:'1.如何在Spring Boot启动的时候运行少量特定的代码(10分)',
-          type:[
-            "A: Mapper接口方法名和mapper.xml中定义的每个sql的id不必相同",
-            "B:Mapper接口方法的输入参教类型和mapper.xml中定义的每个 sql 的parameterlype类型相同",
-            "C:Mapper接口方法的输出参数类型和mapper.xml中定义的每个 sql的resultlype的奖吴型相司",
-            "D:Mapper.xml文件中的namespace即是mapper接口的类路径"
-            ]
-        }
-      ],
+      list:[],
       insertPapers: [],
-      time: 3600000,
-      timeOver: true,
       papers: []
     }
   },
@@ -76,20 +56,14 @@ export default {
   },
   methods: {
     fh(){
-      var aa = confirm("确定退出考试吗？")
-      if(aa){
-        this.$router.go(-1)
-      }
-    },
-    over () {
-        this.timeOver = false
+      this.$router.go(-1)
     },
     getPaper() {
         let token = localStorage.getItem("stuToken");
 				let userId = token.split('-')[2]
 
         this.$axios
-        .get(this.$location.getPapersById, {
+        .get(this.$location.getPapersByIdStudent, {
             params: {
                 id: this.id
             }
@@ -98,35 +72,18 @@ export default {
             console.log(res.data.data)
             this.papers = res.data.data
 
-            var nowDate = new Date();
-            var startDate = new Date(this.papers.papersStartDate);
-
-            if(nowDate <= startDate){
-                Dialog.alert({
-                    title: '提示',
-                    message: "考试时间为"+this.papers.papersStartDate+"，请耐心等待",
-                }).then(() => {
-                    history.back()
-                });
-            }
-
-            this.time = this.time - (nowDate-startDate)
-
-            if(this.time < 0){
-                Dialog.alert({
-                    title: '提示',
-                    message: "考试已结束，请等待下次考试",
-                }).then(() => {
-                    history.back()
-                });
-            }
+            this.time = this.papers.papersOverDate-this.papers.papersStartDate
+            console.log(this.papers.papersOverDate)
+            this.time = (this.time%(3600*24))%3600/60;
+            console.log("相差分钟："+this.time)
 
             for(let a = 0;a<this.papers.papersTitleList.length;a++){
                 this.insertPapers.push({
                     papersId: this.id,
                     exerciseId: this.papers.papersTitleList[a].id,
                     userId: userId,
-                    userExercise: ''
+                    userExercise: this.papers.papersUserResultList[a].userExercise,
+                    standardAnswer: this.papers.papersTitleList[a].standardAnswer
                 })
             }
             console.log(this.insertPapers)
@@ -141,26 +98,7 @@ export default {
         })
     },
     submitPapers () {
-        this.$axios
-        .post(this.$location.insertPapersUserResult, JSON.stringify(this.insertPapers),{headers:{'Content-Type':'application/json'}})
-        .then(res => {
-            Dialog.alert({
-                title: '提示',
-                message: res.data.msg,
-            }).then(() => {
-                if(res.data.status == 200){
-                    location.href="/home1/first1";
-                }
-            });
-        })
-        .catch(function(error) {
-            Dialog.alert({
-                title: '提示',
-                message: error,
-            }).then(() => {
-                // on close
-            });
-        })
+        history.back()
     }
   },
   mounted() {

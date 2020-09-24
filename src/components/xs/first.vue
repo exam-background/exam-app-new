@@ -4,7 +4,10 @@
     <div class="first-body">
       <div class="first-body-text">
         <div class="first-list" v-for="(item,index) in list" :key="index" @click="type1(item.id)">
-          <img :src="item.img"/>
+          <div>
+            <span><img :src="item.professionalDesc"></span><br/>
+            <span>{{item.professionalName}}</span>
+          </div>
         </div>
       </div>
       <div class="first-body-type">
@@ -165,19 +168,35 @@ export default {
     onLoad(event){
       // var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
       console.log(event)
+    },
+    getProfessional() {
+      var that = this;
+      this.$axios
+        .get(this.$location.getProfessionalNoPage)
+        .then(response => {
+          console.log("专业查询结果---->" + JSON.stringify(response.data.data));
+          that.list = response.data.data;
+          console.log("专业查询结果---->" + JSON.stringify(this.IcoList));
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log("查询请求处理失败");
+          console.log(error);
+        });
     }
   },
   mounted(){
+    this.getProfessional();
     this.$nextTick(() => {
       const el = document.querySelector('.van-tab__pane');
       const offsetHeight = el.offsetHeight;
       el.onscroll = () => {
-      const scrollTop = el.scrollTop;
-      const scrollHeight = el.scrollHeight;
-      if ((offsetHeight + scrollTop) - scrollHeight >= -1) {
-        // 需要执行的代码
-        console.log("aa")
-      }
+        const scrollTop = el.scrollTop;
+        const scrollHeight = el.scrollHeight;
+        if ((offsetHeight + scrollTop) - scrollHeight >= -1) {
+          // 需要执行的代码
+          console.log("aa")
+        }
       }
   })
   }
