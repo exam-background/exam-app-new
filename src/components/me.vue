@@ -1,11 +1,7 @@
 <template>
 	<div id="me">
 		<div class="me-img"><img src="../assets/me/1.png" /></div>
-		<div class="me-class">225班-老师-陈某某</div>
-		<div class="me-study">
-			<div>已学20小时</div>
-			<div>已学7节课</div>
-		</div>
+		<div class="me-class">{{className}}-{{proName}}-{{stuName}}</div>
 		<div class="me-body">
 			<div class="me-body-text">
 				<router-link tag="div" to="/check">
@@ -22,17 +18,34 @@
 				</router-link>
 			</div>
 			<div class="me-body-choice">
-				<router-link class="aa" tag="div" to="/personal1">
-					<van-cell is-link>个人信息</van-cell>
-				</router-link>
-				<router-link class="aa" tag="div" to="/modify">
-					<van-cell is-link>修改密码</van-cell>
-				</router-link>
+					<van-cell is-link  @click="updatePassword">修改密码</van-cell>
 				<div @click="tc()">
 					<van-cell is-link>安全退出</van-cell>
 				</div>
 			</div>
 		</div>
+		
+					<van-popup v-model="pwdShow" round="true" style="width: 70%;height:20%;text-align: center;">
+								<br />
+								<h2>重置密码</h2>
+								<br />
+								<p>请输入新密码：<input type="password" v-model="nePass" size="10" maxlength="12" /></p>
+								<br />
+								<p align="center"><van-button round block type="info" @click="pwdUpdate" native-type="submit" style="width:70%">
+					  提交
+					</van-button></p>
+					</van-popup>
+					
+					<van-popup v-model="show" round="true" style="width: 70%;height:20%;text-align: center;">
+								<br />
+								<h2>邮箱验证中</h2>
+								<br />
+								<p>请输入验证码：<input v-model="code" size="6" maxlength="4" /></p>
+								<br />
+								<p align="center"><van-button round block type="info" @click="checkMail" native-type="submit" style="width:70%">
+					  提交
+					</van-button></p>
+					</van-popup>
 	</div>
 </template>
 
@@ -41,6 +54,25 @@
 		Dialog
 	} from 'vant';
 	export default {
+			data() {
+					return {
+						indexList: [],
+						className: '',
+						proName: '',
+						stuName: '',
+						activeNames1: [],
+						activeNames2: [],
+						activeNames3: [],
+						meiriyilian: [],
+						jobcuoti: [],
+						shijuan : [],
+						show:false,
+						code:'',
+						pwdShow:false,
+						nePass:'',
+						stuShow : true
+					}
+				},
 		methods: {
 			tc() {
 				Dialog.confirm({
@@ -56,8 +88,102 @@
 					.catch(() => {
 
 					});
-			}
-		},
+			},
+				updatePassword(){
+							let url = "";
+							let token = localStorage.getItem("stuToken");
+							if(token.indexOf('BAN:') != -1 || token.indexOf('JIAO:') != -1){
+								url = this.$location.teacherBackPassword;
+							}else{
+								url = this.$location.backPassword;
+							}
+							 let stuId = localStorage.getItem("stuToken").split("-")[2]
+							 const params = new FormData();
+							 params.append('id',stuId);
+							
+							 this.$axios.post(url,params).then(res=>{
+							 	if(res.data.status === 100){
+							 		Dialog.alert({
+							 				message: res.data.msg,
+							 			})
+							 	}
+							 })
+							this.show = true;
+						},
+						checkMail(){
+							let url = "";
+							let token = localStorage.getItem("stuToken");
+							if(token.indexOf('BAN:') != -1 || token.indexOf('JIAO:') != -1){
+								url = this.$location.teacherCheckMail;
+							}else{
+								url = this.$location.checkMail;
+							}
+							 let stuId = localStorage.getItem("stuToken").split("-")[2]
+							 const params = new FormData();
+							 params.append('code',this.code)
+							 params.append('id',stuId);
+							 this.$axios.post(url,params).then(res=>{
+							 	console.log(res)
+							 	if(res.data.status === 100){
+							 	 		Dialog.alert({
+							 	 				message: res.data.msg,
+							 	 			})
+							 	 	}else if(res.data.status === 400){
+								Dialog.alert({
+										message: res.data.msg,
+									})
+							 	}else{
+									this.show = false;
+									this.pwdShow = true;
+								}
+							 })
+							//alert("来验证了")
+						},
+						pwdUpdate(){
+							 let url = "";
+											let token = localStorage.getItem("stuToken");
+											if(token.indexOf('BAN:') != -1 || token.indexOf('JIAO:') != -1){
+												url = this.$location.teacherUpdatePassord;
+											}else{
+												url = this.$location.updatePassord;
+											}
+							let stuId = localStorage.getItem("stuToken").split("-")[2]
+							const params = new FormData();
+							params.append('newPassword',this.nePass)
+							params.append('id',stuId);
+							this.$axios.post(url,params).then(res=>{
+								console.log(res)
+								if(res.data.status === 100){
+								 		Dialog.alert({
+								 				message: res.data.msg,
+								 			})
+								 	}else if(res.data.status === 400){
+												Dialog.alert({
+														message: res.data.msg,
+													})
+								}else{
+													this.show = false;
+													this.pwdShow = false;
+													Dialog.alert({
+															message: res.data.msg,
+														})
+												}
+							})
+						}
+		},mounted() {
+			let stuId = localStorage.getItem("stuToken").split("-")[2]
+							//alert(stuId)
+							this.$axios.get(this.$location.getTeacherById, {
+								params: {
+									"id": stuId
+								}
+							}).then(res => {
+								console.log(res.data)
+								this.proName = res.data.data.teacherName;
+								this.className = res.data.data.teacherPosition
+								this.stuName = res.data.data.professionalName
+							});
+		}
 	}
 </script>
 
