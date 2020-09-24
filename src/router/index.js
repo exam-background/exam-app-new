@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import dl from '@/views/dl'
-import home from '@/views/home'
+import home from '@/views/Home'
 import first from '@/components/first'
 import item from '@/components/item'
 import me from '@/components/me'
@@ -164,15 +164,15 @@ router.beforeEach((to, from, next) => {
   // from：现在的要离开的路由
   // next：函数
   // 如果未登录，就跳到登录页，如果登录了，选择哪个页面跳到哪个页面；如果登录了还去了login页面，就跳到首页。
-  if (to.path != '/dl') {
-    if (store.state.type){
-      next();
-    }else{
-      next('/dl')
-    }
-  }else{
-    next();
-  }
+   if (to.path != '/dl') {
+     if (null != localStorage.getItem("stuToken") && '' != localStorage.getItem("stuToken")){
+       next();
+     }else{
+       next('/dl')
+     }
+   }else{
+     next();
+   }
 })
 
 export default router

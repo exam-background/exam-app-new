@@ -2,7 +2,21 @@
 var examsystemPath = 'http://localhost:8081/examsystem'
 
 const location ={
-  getStuById : examsystemPath + "/getStuById",
+	getJiaoClass : examsystemPath +"/getJiaoClass",
+	getBanClass : examsystemPath +"/getBanClass",
+	teacherBackPassword : examsystemPath+"/app/Student/teacherBackPassword",
+	teacherCheckMail : examsystemPath+"/app/Student/teacherCheckMail",
+	teacherUpdatePassord : examsystemPath+"/app/Student/teacherUpdatePassord",
+	getTeacherById : examsystemPath + "/getTeacherById",
+	jiaoLogin: examsystemPath + "/app/Student/jiaoLogin",
+	banLogin : examsystemPath + "/app/Student/banLogin",
+	updatePassord : examsystemPath + "/app/Student/updatePassord",
+	checkMail : examsystemPath + "/app/Student/checkMail",
+	backPassword : examsystemPath +"/app/Student/backPassword",
+	shijuan : examsystemPath + "/cuoti/shijuan",
+	jobcuoti : examsystemPath + "/cuoti/job",
+	meiriyilian : examsystemPath +"/cuoti/meiriyilian" ,
+	getStuById : examsystemPath + "/getStuById",
   doLogin : examsystemPath + '/app/Student/doLogin',
   courseForPage : examsystemPath + '/courseForPage',
   // 查询所有专业分类
