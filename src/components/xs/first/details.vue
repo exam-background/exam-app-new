@@ -4,25 +4,126 @@
     <div class="details-img"><img src="../../../assets/sy/3.jpg"/></div>
     <div class="details-body">
       <div>问：</div>
-      <div>{{this.$route.params.list}}</div>
-      <div>{{this.$route.params.listId}}</div>
-      <div>{{this.$route.params.active}}</div>
-      <div>{{this.$route.params.id}}</div>
+      <div>{{exercise.title}}</div>
       <div>答：</div>
-      <textarea class="details-textarea"></textarea>
-      <div class="details-button" ><button >完成</button></div>
+        <div v-if="exercise.types == 2">
+          <van-radio-group style="margin:5px 0px;padding:5px;" v-model="addExercise.submitAnswer" direction="horizontal" v-for="(exercise, index) in exercise.exerciseItems" :key="index">
+            <van-radio :name="exercise.orderNum" style="height:40px;">{{exercise.orderNum}}：{{exercise.content}}</van-radio>
+          </van-radio-group>
+        </div>
+        <div v-else>
+            <textarea class="details-textarea" v-model="addExercise.submitAnswer"></textarea>
+        </div>
+      <div class="details-button" ><button @click="insertExercise">完成</button></div>
     </div>
   </div>
 </template>
 
 <script>
+import { Dialog } from 'vant';
 export default {
+  data(){
+    return{
+      detailId: 0,
+      exercise: [],
+      clickRedio: 0,
+      addExercise: [{
+        studentId: '',
+        exerciseId: '',
+        submitAnswer: ''
+      }]
+    }
+  },
   created() {
-    console.log(this.$route.params.active,this.$route.params.id,this.$route.params.listId)
+    this.detailId = this.$route.params.papersId
+    this.$nextTick ( () => {
+      alert(this.$route.params.active)
+      // alert(this.detailId)
+      if(this.$route.params.id == 1){
+        this.$axios
+        .get(this.$location.getJobDayExerciseById, {params: {id: this.detailId}})
+        .then(response => {
+          this.exercise = response.data.data;
+          console.log("就业训练查询结果---->" + JSON.stringify(this.exercise));
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log("就业训练请求处理失败");
+          console.log(error);
+        });
+      }else{
+        this.$axios
+        .get(this.$location.getTechnologyDayExerciseById, {params: {id: this.detailId}})
+        .then(response => {
+          this.exercise = response.data.data;
+          console.log("技术训练查询结果---->" + JSON.stringify(this.exercise));
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log("技术训练请求处理失败");
+          console.log(error);
+        });
+      }
+    })
+    // console.log(this.$route.params.active,this.$route.params.id,this.$route.params.listId)
   },
   methods: {
     back(){
       this.$router.go(-1)
+    },
+    insertExercise () {
+      Dialog.confirm({
+        message: '是否提交',
+      })
+      .then(() => {
+        let token = localStorage.getItem("stuToken");
+        let id = token.split('-')[2]
+        if(this.$route.params.id == 1){
+          this.$axios
+          .post(this.$location.addJobDayExerciseSubmit, this.$qs.stringify({
+            studentId: id,
+            exerciseId: this.detailId,
+            submitAnswer: this.addExercise.submitAnswer
+          }))
+          .then(response => {
+              Dialog.alert({
+                message: "答题成功",
+              }).then(() => {
+                // on close
+              });
+              location.href="home1/first1";
+          })
+          .catch(function(error) {
+            // 请求失败处理
+            console.log("技术训练请求处理失败");
+            console.log(error);
+          });
+        }else{
+          this.$axios
+          .post(this.$location.addTechnologyDayExerciseSubmit, this.$qs.stringify({
+            studentId: id,
+            exerciseId: this.detailId,
+            submitAnswer: this.addExercise.submitAnswer
+          }))
+          .then(response => {
+            Dialog.alert({
+              title: '提示',
+              message: "答题成功",
+            }).then(() => {
+              location.href="/home1/first1"
+            });
+          })
+          .catch(function(error) {
+            // 请求失败处理
+            console.log("技术训练请求处理失败");
+            console.log(error);
+          });
+        }
+      })
+      .catch(() => {
+        
+      });
+      
     }
   },
 }

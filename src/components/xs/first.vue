@@ -5,19 +5,19 @@
       <div class="first-body-text">
         <div class="first-list" v-for="(item,index) in list" :key="index" @click="type1(item.id)">
           <div>
-            <span><img :src="item.professionalDesc"></span><br/>
+            <span><img :src="'/'+item.professionalDesc"></span><br/>
             <span>{{item.professionalName}}</span>
           </div>
         </div>
       </div>
       <div class="first-body-type">
-        <van-tabs v-model="active" swipeable>
-          <van-tab  :title="'就业训练'">
+        <van-tabs v-model="active" swipeable @change="onClick">
+          <van-tab :title="'就业训练'">
             <div v-for="(item,index) in list1" :key="index" class="first-list1" @load="onLoad($event)">
               <div>
-                <div>{{item.name}}</div>
+                <div>{{item.title}}</div>
                 <div>
-                  <div v-for="(item1, index1) in item.type" :key="index1">{{item1}}</div>
+                  <div>就业训练</div>
                 </div>
               </div>
               <div class="first-item-button1" @click="tz(item.id)"><span class="first-item-span">训练</span></div>
@@ -26,9 +26,9 @@
           <van-tab  :title="'技术训练'">
             <div v-for="(item,index) in list2" :key="index" class="first-list1">
               <div>
-                <div>{{item.name}}</div>
+                <div>{{item.title}}</div>
                 <div>
-                  <div v-for="(item1, index1) in item.type" :key="index1">{{item1}}</div>
+                  <div>技术训练</div>
                 </div>
               </div>
               <div class="first-item-button1"><span class="first-item-span">训练</span></div>
@@ -44,107 +44,14 @@
 export default {
   data() {
     return {
-      list:[
-        {
-          id:0,
-          img:require("../../assets/sy/1.png"),
-        },
-        {
-          id:1,
-          img:require("../../assets/sy/1.png"),
-        },
-        {
-          id:2,
-          img:require("../../assets/sy/1.png"),
-
-        },
-        {
-          id:3,
-          img:require("../../assets/sy/1.png"),
-        },
-      ],
+      list:[],
       active: 0,
       activeName: '1',
-      list1:[
-        {
-          id:0,
-          name:'请写出Mybatis框架的优缺点',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:1,
-          name:'#和$0的区别是什么',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:2,
-          name:'简述一下Mybatis的编程步骤',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:3,
-          name:'当实体类中的属性名和表中的字段名不—样，怎么办',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          id:4,
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        }
-      ],
-      list2:[
-        {
-          name:'2222222222',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          name:'22222222',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          name:'2222222222',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          name:'222222222222',
-          type:['就业训达','JAVA','MyBatIr']
-        },
-        {
-          name:'下列关于使用MyBatis的mapper接口调用错误的是',
-          type:['就业训达','JAVA','MyBatIr']
-        }
-      ],
+      pageSize: 6,
+      list1:[], 
+      list2:[],
     listindes:0,
+    page: 0
     }
   },
   methods: {
@@ -152,7 +59,7 @@ export default {
       this.$router.push({
         name:"details1",
         params:{
-          list:this.list1[index].name,
+          papersId: index,
           listId:this.listindes,
           active:this.active,
           id:index,
@@ -162,7 +69,11 @@ export default {
       // console.log(this.active,this.listindes,index)
     },
     type1(val){
+      this.page = 0
       this.listindes = val
+      this.list1 = []
+      this.list2 = []
+      this.getPapers()
       console.log(val)
     },
     onLoad(event){
@@ -183,10 +94,75 @@ export default {
           console.log("查询请求处理失败");
           console.log(error);
         });
+    },
+    getPapers () {
+      this.page = this.page + 1;
+      if(this.active == 0){
+        this.$axios
+        .get(this.$location.getTechnologyDayExerciseByProfessionalId, {
+          params: {
+            id: this.listindes,
+            pageSize: this.pageSize,
+            currentPage: this.page
+          }
+        })
+        .then(res => {
+          const data = res.data.data;
+          const arrlist=  res.data.data.data;
+          // 渲染总数据条数
+          console.log(data);
+          this.page = data.total;
+          arrlist.map(item => {
+            this.list1.push(item)
+            console.log(item)
+          }) 
+          this.page = data.curPage + 1; 
+          // _this.list = res.data 
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log("查询请求处理失败");
+          console.log(error);
+        })
+      }else{
+        this.$axios
+        .get(this.$location.getJobDayExerciseByProfessid, {
+          params: {
+            id: this.listindes,
+            pageSize: this.pageSize,
+            currentPage: this.page
+          }
+        })
+        .then(res => {
+          const data = res.data.data;
+          const arrlist=  res.data.data.data;
+          // 渲染总数据条数
+          console.log(data);
+          this.page = data.total;
+          arrlist.map(item => {
+              this.list2.push(item)
+          }) 
+          this.page = data.curPage + 1; 
+          // _this.list = res.data 
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log("查询请求处理失败");
+          console.log(error);
+        })
+      }
+    },
+    onClick (index, title){
+      this.page = 0
+      this.active == index
+      this.list1 = []
+      this.list2 = []
+      this.getPapers()
     }
   },
   mounted(){
     this.getProfessional();
+    this.getPapers();
     this.$nextTick(() => {
       const el = document.querySelector('.van-tab__pane');
       const offsetHeight = el.offsetHeight;
@@ -196,6 +172,9 @@ export default {
         if ((offsetHeight + scrollTop) - scrollHeight >= -1) {
           // 需要执行的代码
           console.log("aa")
+
+          this.getPapers();
+
         }
       }
   })
