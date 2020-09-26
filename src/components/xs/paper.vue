@@ -4,36 +4,74 @@
     <div class="first-body">
       <div class="first-body-type">
         <van-tabs v-model="active" swipeable>
-          <van-tab  :title="'就业训练'">
-            <van-collapse v-model="activeName1" accordion>
+          <van-tab  :title="'未考试卷'">
+            <van-collapse v-model="activeName1" accordion @change="clickType">
               <van-collapse-item title="技术考核" name="1">
                 <div v-if="list1 != ''">
                   <div v-for="(item,index) in list1" :key="index" class="first-list1">
                     <div>
                       <div>{{item.name}}</div>
-                      <div>
-                        <div v-for="(item1,index1) in item.type" :key="index1">{{item1}}</div>
+                      <div class="con_tag">
+                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
+                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
+                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
                       </div>
                     </div>
                     <div class="first-item-button1" @click="kscs(item.id)"><span class="first-item-span">开始<br/>测试</span></div>
                   </div>
                 </div>
-                <div v-else>暂时没有考试记录</div>
+                <div v-else>暂时没有考试</div>
               </van-collapse-item>
-              <van-collapse-item title="就业训练" name="2">
-                <div v-if="list2 != ''"></div>
-                <div v-else>暂时没有考试记录</div>
+              <van-collapse-item title="就业训练" name="0">
+                <div v-if="list2 != ''">
+                  <div v-for="(item,index) in list2" :key="index" class="first-list1">
+                    <div>
+                      <div>{{item.name}}</div>
+                      <div class="con_tag">
+                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
+                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
+                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      </div>
+                    </div>
+                    <div class="first-item-button1" @click="kscs(item.id)"><span class="first-item-span">开始<br/>测试</span></div>
+                  </div>
+                </div>
+                <div v-else>暂时没有考试</div>
               </van-collapse-item>
             </van-collapse>
           </van-tab>
-          <van-tab  :title="'技术训练'">
-            <van-collapse v-model="activeName" accordion>
+          <van-tab  :title="'已考试卷'">
+            <van-collapse v-model="activeName" accordion @change="clickPapers">
               <van-collapse-item title="技术考核" name="1">
-                <div v-if="list3 != ''">{{list2}}</div>
+                <div v-if="list3 != ''">
+                  <div v-for="(item,index) in list3" :key="index" class="first-list1">
+                    <div>
+                      <div>{{item.name}}<span style="margin-left:20px;">得分：{{score[index].count}}/{{score[index].student}}</span></div>
+                      <div class="con_tag">
+                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
+                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
+                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      </div>
+                    </div>
+                    <div class="first-item-button1" @click="show(item.id)"><span class="first-item-span">查看<br/>测试</span></div>
+                  </div>
+                </div>
                 <div v-else>暂时没有考试记录</div>
               </van-collapse-item>
-              <van-collapse-item title="就业训练" name="2">
-                <div v-if="list4 != ''"></div>
+              <van-collapse-item title="就业试卷" name="0">
+                <div v-if="list4 != ''">
+                  <div v-for="(item,index) in list4" :key="index" class="first-list1">
+                    <div>
+                      <div>{{item.name}}<span style="margin-left:20px;">得分：{{score[index].count}}/{{score[index].student}}</span></div>
+                      <div class="con_tag">
+                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
+                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
+                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      </div>
+                    </div>
+                    <div class="first-item-button1" @click="show(item.id)"><span class="first-item-span">查看<br/>测试</span></div>
+                  </div>
+                </div>
                 <div v-else>暂时没有考试记录</div>
               </van-collapse-item>
             </van-collapse>
@@ -45,27 +83,19 @@
 </template>
 
 <script>
+import { Dialog } from 'vant';
 export default {
   data() {
     return {
       active: 0,
       activeName: '1',
       activeName1: '1',
-      list1:[
-        {
-          id:0,
-          name:"技术测试（三）",
-          type:["就业训练","JAVA","MyBatIr","Mfhgds"]
-        },
-        {
-          id:1,
-          name:"技术测试（三）",
-          type:["就业训练","JAVA","MyBatIr","Mfhgds"]
-        }
-      ],
+      list1:[],
       list2:[],
       list3:[],
       list4:[],
+      score: [],
+      type: 0
     }
   },
   methods: {
@@ -77,8 +107,93 @@ export default {
           active:this.active
         }
       })
+    },
+    show(val){
+      this.$router.push({
+        name:'show',
+        params:{
+          val:val,
+          active:this.active
+        }
+      })
+    },
+    clickType (activeNames) {
+      let token = localStorage.getItem("stuToken");
+      let id = token.split('-')[2]
+      this.type = activeNames;
+      console.log("点击下拉框"+activeNames)
+      this.$axios
+      .get(this.$location.getPapersByUserIdAndType, {
+          params: {
+              userId: id,
+              type: activeNames
+          }
+      })
+      .then(res => {
+          console.log(res.data.data)
+          if(activeNames == '1'){
+              this.list1 = res.data.data
+          }else{
+              this.list2 = res.data.data
+          }
+      })
+      .catch(function(error) {
+          Dialog.alert({
+              title: '提示',
+              message: error,
+          }).then(() => {
+              // on close
+          });
+      })
+    },
+    clickPapers (activeNames) {
+      if(activeNames == ""){
+        activeNames=1;
+      }
+      let token = localStorage.getItem("stuToken");
+      let id = token.split('-')[2]
+      this.score = []
+      this.type = activeNames;
+      this.$axios
+      .get(this.$location.getPapersByUserIdAndTypeFinish, {
+          params: {
+              userId: id,
+              type: activeNames
+          }
+      })
+      .then(res => {
+          console.log(res.data.data)
+          for(var c=0;c<res.data.data.length;c++){
+              this.score.push({
+                  count: 0,
+                  student: 0
+              });
+              for(let i=0;i<res.data.data[c].papersUserResultList.length;i++){
+                  // 遍历分数
+                  this.score[c].count=this.score[c].count+res.data.data[c].papersUserResultList[i].setScore
+                  this.score[c].student=this.score[c].student+res.data.data[c].papersUserResultList[i].mark
+              }
+          }
+          if(activeNames == '1'){
+              this.list3 = res.data.data
+          }else{
+              this.list4 = res.data.data
+          }
+      })
+      .catch(function(error) {
+          Dialog.alert({
+              title: '提示',
+              message: error,
+          }).then(() => {
+              // on close
+          });
+      })
     }
   },
+  mounted() {
+    this.clickType(1)
+    this.clickPapers(1)
+  }
 }
 </script>
 

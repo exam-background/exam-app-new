@@ -25,6 +25,7 @@ import paper1 from "@/components/xs/paper"
 import me1 from "@/components/xs/me"
 import details1 from "@/components/xs/first/details"
 import examine1 from "@/components/xs/paper/examine"
+import show from "@/components/xs/paper/showexam"
 
 import Vuex from 'vuex'
 import store from '@/store'
@@ -147,6 +148,11 @@ const routes = [
         path:"/home1/examine1",
         name:'examine1',
         component:examine1
+      },
+      {
+        path:"/home1/show",
+        name:'show',
+        component:show
       }
     ]
   }
