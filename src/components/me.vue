@@ -3,20 +3,7 @@
 		<div class="me-img"><img src="../assets/me/1.png" /></div>
 		<div class="me-class">{{className}}-{{proName}}-{{stuName}}</div>
 		<div class="me-body">
-			<div class="me-body-text">
-				<router-link tag="div" to="/check">
-					<div><img src="../assets/me/2.png" /></div>
-					<div>考核成绩</div>
-				</router-link>
-				<router-link tag="div" to="/information">
-					<div><img src="../assets/me/2.png" /></div>
-					<div>信息中心</div>
-				</router-link>
-				<router-link tag="div" to="/Classroom">
-					<div><img src="../assets/me/2.png" /></div>
-					<div>我的课堂</div>
-				</router-link>
-			</div>
+ 
 			<div class="me-body-choice">
 					<van-cell is-link  @click="updatePassword">修改密码</van-cell>
 				<div @click="tc()">

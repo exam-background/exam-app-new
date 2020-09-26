@@ -5,45 +5,34 @@
     </div>
     <div class="examine-body1">
       <div>
-        <van-search class="aa"
-            v-model="value1"
-            shape="round"
-            background="#fff"
-            placeholder="请输入搜索关键词"
-            right-icon=''
-          />
       <div class="examine-body-text">
       <van-tabs v-model="active" swipeable>
           <van-tab  :title="'就业训练'">
             <div class="examine-body-text1">
-              <div>班级</div>
-              <div>人数</div>
+              <div>题目</div>
               <div>错题数量</div>
               <div>操作</div>
             </div>
             <div class="over">
-              <div v-for="(item,index) in list" :key="index"  class="examine-body-list">
-                <div>{{item.type}}</div>
-                <div>{{item.name}}</div>
-                <div>{{item.indexs}}</div>
+              <div v-for="(item,index) in job" :key="index"  class="examine-body-list">
+                <div>{{item.title}}</div>
+                <div>{{item.count}}</div>
                 <div><button @click="ck(item.id)">查看</button></div>
               </div>
             </div>
           </van-tab>
           <van-tab  :title="'技术训练'">
             <div class="examine-body-text1">
-              <div>班级</div>
-              <div>人数</div>
-              <div>错题数量</div>
-              <div>操作</div>
+             <div>题目</div>
+             <div>错题数量</div>
+             <div>操作</div>
             </div>
             <div class="over">
-              <div v-for="(item,index) in list" :key="index" class="examine-body-list">
-                <div>{{item.type}}</div>
-                <div>{{item.name}}</div>
-                <div>{{item.indexs}}</div>
-                <div><button @click="ck(item.id)">查看</button></div>
-              </div>
+               <div v-for="(item,index) in jiShu" :key="index" class="examine-body-list">
+                <div>{{item.title}}</div>
+                <div>{{item.count}}</div>
+                <div><button @click="ck(item.id,item.standard)">查看</button></div>
+              </div> 
             </div>
           </van-tab>
         </van-tabs>
@@ -70,98 +59,8 @@ export default {
           values:['17班', '18班', '19班', '19班', '19班', '19班', '19班', '19班']
         }
       ],
-      list:[
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:1,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:2,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:3,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:4,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:5,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:6,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:7,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        },
-        {
-          type:"前端-17",
-          name:50,
-          id:0,
-          indexs:100,
-        }
-      ],
+      jiShu:[],
+	  job:[]
     };
   },
   methods: {
@@ -174,16 +73,28 @@ export default {
       this.value = values;
       this.showPicker = false;
     },
-    ck(val){
+    ck(id,standard){
+		alert(standard)
       this.$router.push({
-        name:'information1',
+        path:'/information1',
         params:{
-          val:val,
-          active:this.active
+          val:id,
+          standard:this.standard
         }
       })
     }
-  },
+  },mounted() {
+	  let stuId = localStorage.getItem("stuToken").split("-")[2]
+	  				//alert(stuId)
+	  				this.$axios.get(this.$location.getJiShuCount, {
+	  					params: {
+	  						"id": stuId
+	  					}
+	  				}).then(res => {
+	  					console.log(res.data)
+						this.jiShu = res.data.data
+	  				})
+  }
 }
 </script>
 

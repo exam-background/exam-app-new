@@ -11,10 +11,6 @@
         <div><van-icon name="bars" /></div>
         <div>班级错题汇总</div>
       </router-link>
-      <router-link tag="div" to='/home/first'>
-        <div><van-icon name="search" /></div>
-        <div>重点关注学生</div>
-      </router-link>
       <router-link tag="div" to='/home/me'>
         <div><van-icon name="contact" /></div>
         <div>个人中心</div>
