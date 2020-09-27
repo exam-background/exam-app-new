@@ -7,21 +7,7 @@
       <div>
       <div class="examine-body-text">
       <van-tabs v-model="active" swipeable>
-          <van-tab  :title="'就业训练'">
-            <div class="examine-body-text1">
-              <div>题目</div>
-              <div>错题数量</div>
-              <div>操作</div>
-            </div>
-            <div class="over">
-              <div v-for="(item,index) in job" :key="index"  class="examine-body-list">
-                <div>{{item.title}}</div>
-                <div>{{item.count}}</div>
-                <div><button @click="ck(item.id)">查看</button></div>
-              </div>
-            </div>
-          </van-tab>
-          <van-tab  :title="'技术训练'">
+          <van-tab  :title="'错题排行'">
             <div class="examine-body-text1">
              <div>题目</div>
              <div>错题数量</div>
@@ -65,7 +51,7 @@ export default {
   },
   methods: {
     onChange(index) {
-      console.log(index)
+      //console.log(index)
       this.current = index;
     },
     onConfirm(value) {
@@ -74,12 +60,12 @@ export default {
       this.showPicker = false;
     },
     ck(id,standard){
-		alert(standard)
+		//alert(standard)
       this.$router.push({
         path:'/information1',
-        params:{
+        query:{
           val:id,
-          standard:this.standard
+          standard:standard
         }
       })
     }

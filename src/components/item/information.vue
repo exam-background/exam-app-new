@@ -4,20 +4,12 @@
       <div @click="ht()"><van-icon name="arrow-left" /></div>
     </div>
 	
-    <div class="information1-tetx">
-		<div><h1>正确答案：{{standard}}</h1></div>
-      <div class="information1-tetx1">
-        <div>姓名</div>
-        <div>答题数量</div>
-        <div>错题数量</div>
-      </div>
-      <div class="information1-table">
-        <div v-for="(item,index) in list" :key="index">
-          <div>{{item.name}}</div>
-          <div>{{item.type}}</div>
-          <div>{{item.type1}}</div>
-        </div>
-      </div>
+    <div class="information1-tetx" style="overflow: scroll;">
+		<div>
+			<h1></h1>
+			<h1>正确答案：</h1>
+			<p  v-html="standard"></p>
+			</div>
     </div>
   </div>
 </template>
@@ -38,8 +30,7 @@ export default {
     }
   },
   created() {
-	  this.standard = this.$route.params.standard
-    console.log(this.$route.params.active,this.$route.params.val)
+
   },
   methods: {
     ht(){
@@ -53,7 +44,10 @@ export default {
         }
       })
     }
-  },
+  },mounted() {
+  	this.standard = this.$route.query.standard
+  	console.log(this.$route )
+  }
 }
 </script>
 
