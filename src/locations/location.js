@@ -1,7 +1,9 @@
 //考核
-var examsystemPath = 'http://localhost:8081/examsystem'
+var examsystemPath = 'http://192.168.43.30:8081/examsystem'
 
 const location ={
+	getJiShuCount : examsystemPath+"/getJiShuCount",
+	getStudentByClassId : examsystemPath+"/getStudentByClassId",
 	getJiaoClass : examsystemPath +"/getJiaoClass",
 	getBanClass : examsystemPath +"/getBanClass",
 	teacherBackPassword : examsystemPath+"/app/Student/teacherBackPassword",

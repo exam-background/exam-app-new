@@ -3,19 +3,19 @@
     <div class="information1-dh">
       <div @click="ht()"><van-icon name="arrow-left" /></div>
     </div>
+	
     <div class="information1-tetx">
+		<div><h1>正确答案：{{standard}}</h1></div>
       <div class="information1-tetx1">
         <div>姓名</div>
         <div>答题数量</div>
         <div>错题数量</div>
-        <div>操作</div>
       </div>
       <div class="information1-table">
         <div v-for="(item,index) in list" :key="index">
           <div>{{item.name}}</div>
           <div>{{item.type}}</div>
           <div>{{item.type1}}</div>
-          <div><button @click="ck(item.id)">查看</button></div>
         </div>
       </div>
     </div>
@@ -32,113 +32,13 @@ export default {
           name:'张三',
           type:200,
           type1:50,
-        },
-        {
-          id:1,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:2,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:3,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
-        },
-        {
-          id:4,
-          name:'张三',
-          type:200,
-          type1:50,
         }
-      ]
+      ],
+	  standard:'',
     }
   },
   created() {
+	  this.standard = this.$route.params.standard
     console.log(this.$route.params.active,this.$route.params.val)
   },
   methods: {

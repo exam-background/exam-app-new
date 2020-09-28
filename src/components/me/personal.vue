@@ -4,17 +4,16 @@
       <div @click="ht()"><van-icon name="arrow-left" /></div>
     </div>
     <div class="personal-img"><img src="../../assets/personal/1.png"/></div>
-    <div class="personal-bj">225班-前端</div>
+    <div class="personal-bj">{{stu.stuName}}</div>
     <div class="personal-body">
-      <div><label>姓   名</label>：<input type="text" readonly></div>
-      <div><label>性   别</label>：<input type="text" readonly></div>
-      <div><label>年   龄</label>：<input type="text" readonly></div>
-      <div>联系方式：<input type="text"></div>
+      <div><label>姓   名</label>：<input type="text" readonly :value="stu.stuName"></div>
+      <div><label>开班时间</label>：<input type="text" readonly :value="stu.date"></div>
+      <div>联系方式：<input type="text" :value="stu.email == '' || stu.email==null ? '暂无联系方式':stu.email"></div>
       <hr/>
       <div class="personal-textarea">
         <div>基本情况：</div>
         <textarea rows="3" cols="20">
-        在w3school，你可以找到你所需要的所有的网站建设教程。
+       {{stu.detail}}
         </textarea>
       </div>
     </div>
@@ -23,11 +22,26 @@
 
 <script>
 export default {
+	data(){
+		return{
+			stu:{
+				stuName:'',
+				date:'',
+				'email':'',
+				'detail':''
+			}
+		}
+	},
    methods: {
     ht(){
       this.$router.go(-1)
     }
-  },
+  },mounted() {
+  	this.stu.stuName = this.$route.query.stuName;
+	this.stu.date = this.$route.query.date;
+	this.stu.email = this.$route.query.email;
+	this.stu.detail = this.$route.query.detail;
+  }
 }
 </script>
 
@@ -85,7 +99,7 @@ export default {
   letter-spacing:12px;
 }
 .personal-body>div>input{
-  width: 150px;
+  width: 250px;
   border: 1px solid rgba(0, 0, 0, 0);
   border-bottom: 1px solid #ccc;
   height: 20px;
