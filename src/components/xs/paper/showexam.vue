@@ -7,13 +7,16 @@
         </template>
       </van-nav-bar>
     </div>
-    <div class="examine-img"><h3>{{papers.name}}</h3></div>
+    <div class="examine-img"><h1 align="center">{{papers.name}}</h1></div>
     <div class="examine-text">
       <div>开始时间:{{papers.papersStartDate}}</div>
-      <div class="con_tag">
-          <van-tag size="large" class="tag" type="primary" v-if="papers.type == 0">就业训练</van-tag>
-          <van-tag size="large" class="tag" type="primary" v-else>技术训练</van-tag>
-          <van-tag size="large" class="tag" type="primary">{{papers.professional.professionalName}}</van-tag>
+      <div>
+
+      </div>
+      <div>
+        <span v-if="papers.type == 0" style="margin-left:5px;">就业训练</span>
+        <span v-else style="margin-left:5px;">技术训练</span>
+        <span style="margin-left:5px;">{{papers.professional.professionalName}}</span>
       </div>
     </div>
     <div class="examine-body">
