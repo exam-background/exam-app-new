@@ -18,6 +18,8 @@
                 <div>{{item.title}}</div>
                 <div>
                   <div>就业训练</div>
+                  <div>{{item.professional.professionalName}}</div>
+                  <div>{{item.course.courseName}}</div>
                 </div>
               </div>
               <div class="first-item-button1" @click="tz(item.id)"><span class="first-item-span">训练</span></div>
@@ -29,6 +31,9 @@
                 <div>{{item.title}}</div>
                 <div>
                   <div>技术训练</div>
+                  <div>{{item.professional.professionalName}}</div>
+                  <div>{{item.course.courseName}}</div>
+                  <!-- <div>{{item.professional.professionalName}}</div> -->
                 </div>
               </div>
               <div class="first-item-button1"><span class="first-item-span">训练</span></div>
@@ -97,25 +102,27 @@ export default {
     },
     getPapers () {
       this.page = this.page + 1;
+      let token = localStorage.getItem("stuToken");
+      let userId = token.split('-')[2]
       if(this.active == 0){
         this.$axios
         .get(this.$location.getTechnologyDayExerciseByProfessionalId, {
           params: {
             id: this.listindes,
             pageSize: this.pageSize,
-            currentPage: this.page
+            currentPage: this.page,
+            studentid: userId
           }
         })
         .then(res => {
           const data = res.data.data;
           const arrlist=  res.data.data.data;
           // 渲染总数据条数
-          console.log(data);
           this.page = data.total;
           arrlist.map(item => {
             this.list1.push(item)
-            console.log(item)
           }) 
+          console.log(JSON.stringify(this.list1))
           this.page = data.curPage + 1; 
           // _this.list = res.data 
         })
@@ -130,7 +137,8 @@ export default {
           params: {
             id: this.listindes,
             pageSize: this.pageSize,
-            currentPage: this.page
+            currentPage: this.page,
+            studentid: userId
           }
         })
         .then(res => {

@@ -11,10 +11,10 @@
                   <div v-for="(item,index) in list1" :key="index" class="first-list1">
                     <div>
                       <div>{{item.name}}</div>
-                      <div class="con_tag">
-                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
-                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
-                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      <div>
+                        <span v-if="type == 0" style="margin-left:5px;">就业训练</span>
+                        <span v-else style="margin-left:5px;">技术训练</span>
+                        <span v-for="(courses, courseIndex) in item.courseList" :key="courseIndex" style="margin-left:5px;">{{courses.courseName}}</span>
                       </div>
                     </div>
                     <div class="first-item-button1" @click="kscs(item.id)"><span class="first-item-span">开始<br/>测试</span></div>
@@ -27,10 +27,10 @@
                   <div v-for="(item,index) in list2" :key="index" class="first-list1">
                     <div>
                       <div>{{item.name}}</div>
-                      <div class="con_tag">
-                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
-                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
-                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      <div>
+                        <span v-if="type == 0" style="margin-left:5px;">就业训练</span>
+                        <span v-else style="margin-left:5px;">技术训练</span>
+                        <span v-for="(courses, courseIndex) in item.courseList" :key="courseIndex" style="margin-left:5px;">{{courses.courseName}}</span>
                       </div>
                     </div>
                     <div class="first-item-button1" @click="kscs(item.id)"><span class="first-item-span">开始<br/>测试</span></div>
@@ -47,10 +47,10 @@
                   <div v-for="(item,index) in list3" :key="index" class="first-list1">
                     <div>
                       <div>{{item.name}}<span style="margin-left:20px;">得分：{{score[index].count}}/{{score[index].student}}</span></div>
-                      <div class="con_tag">
-                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
-                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
-                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      <div>
+                        <span v-if="type == 0" style="margin-left:5px;">就业训练</span>
+                        <span v-else style="margin-left:5px;">技术训练</span>
+                        <span v-for="(courses, courseIndex) in item.courseList" :key="courseIndex" style="margin-left:5px;">{{courses.courseName}}</span>
                       </div>
                     </div>
                     <div class="first-item-button1" @click="show(item.id)"><span class="first-item-span">查看<br/>测试</span></div>
@@ -63,10 +63,10 @@
                   <div v-for="(item,index) in list4" :key="index" class="first-list1">
                     <div>
                       <div>{{item.name}}<span style="margin-left:20px;">得分：{{score[index].count}}/{{score[index].student}}</span></div>
-                      <div class="con_tag">
-                          <van-tag class="tag" type="primary" v-if="type == 0">就业训练</van-tag>
-                          <van-tag class="tag" type="primary" v-else>技术训练</van-tag>
-                          <van-tag class="tag" type="primary" v-for="(courses, courseIndex) in item.courseList" :key="courseIndex">{{courses.courseName}}</van-tag>
+                      <div>
+                        <span v-if="type == 0" style="margin-left:5px;">就业训练</span>
+                        <span v-else style="margin-left:5px;">技术训练</span>
+                        <span v-for="(courses, courseIndex) in item.courseList" :key="courseIndex" style="margin-left:5px;">{{courses.courseName}}</span>
                       </div>
                     </div>
                     <div class="first-item-button1" @click="show(item.id)"><span class="first-item-span">查看<br/>测试</span></div>
@@ -147,6 +147,8 @@ export default {
       })
     },
     clickPapers (activeNames) {
+      this.list3 = []
+      this.list4 = []
       if(activeNames == ""){
         activeNames=1;
       }
@@ -174,6 +176,7 @@ export default {
                   this.score[c].student=this.score[c].student+res.data.data[c].papersUserResultList[i].mark
               }
           }
+          console.log("成绩："+JSON.stringify(this.score))
           if(activeNames == '1'){
               this.list3 = res.data.data
           }else{
