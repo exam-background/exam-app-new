@@ -5,7 +5,7 @@
       <div class="first-body-text">
         <div class="first-list" v-for="(item,index) in list" :key="index" @click="type1(item.id)">
           <div>
-            <span><img :src="'/'+item.professionalDesc"></span><br/>
+            <span><br/><img :src="'/'+item.professionalDesc" width="30px"></span><br/>
             <span>{{item.professionalName}}</span>
           </div>
         </div>

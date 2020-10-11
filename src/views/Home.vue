@@ -8,7 +8,7 @@
         <div>首页</div>
       </router-link>
       <router-link tag="div" to='/home/item'>
-        <div><van-icon name="bars" /></div>
+        <div><van-icon name="bars" v-if="isShow" /></div>
         <div>班级错题汇总</div>
       </router-link>
       <router-link tag="div" to='/home/me'>
@@ -23,6 +23,7 @@
 export default {
   data() {
     return {
+      isShow:true,
       active: 0,
     }
   },
