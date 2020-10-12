@@ -26,7 +26,7 @@
             </div>
           </van-tab>
           <van-tab  :title="'技术训练'">
-            <div v-for="(item,index) in list2" :key="index" class="first-list1">
+            <div v-for="(item,index) in list2" :key="index" class="first-list1" @load="onLoad($event)">
               <div>
                 <div>{{item.title}}</div>
                 <div>
@@ -36,7 +36,7 @@
                   <!-- <div>{{item.professional.professionalName}}</div> -->
                 </div>
               </div>
-              <div class="first-item-button1"><span class="first-item-span">训练</span></div>
+              <div class="first-item-button1" @click="tz(item.id)"><span class="first-item-span">训练</span></div>
             </div>
           </van-tab>
         </van-tabs>
@@ -171,21 +171,38 @@ export default {
   mounted(){
     this.getProfessional();
     this.getPapers();
-    this.$nextTick(() => {
-      const el = document.querySelector('.van-tab__pane');
-      const offsetHeight = el.offsetHeight;
-      el.onscroll = () => {
-        const scrollTop = el.scrollTop;
-        const scrollHeight = el.scrollHeight;
-        if ((offsetHeight + scrollTop) - scrollHeight >= -1) {
-          // 需要执行的代码
-          console.log("aa")
+  //   this.$nextTick(() => {
+  //     const el = document.querySelector('.van-tab__pane');
+  //     const offsetHeight = el.offsetHeight;
+  //     el.onscroll = () => {
+  //       const scrollTop = el.scrollTop;
+  //       const scrollHeight = el.scrollHeight;
+  //       if ((offsetHeight + scrollTop) - scrollHeight >= -1) {
+  //         // 需要执行的代码
+  //         console.log("aa")
 
-          this.getPapers();
+  //         this.getPapers();
 
-        }
+  //       }
+  //     }
+  // })
+
+  this.$nextTick(() => {
+      const el = document.getElementsByClassName('van-tab__pane');
+      for(let i =0;i < el.length;i++){
+        // let offsetHeight = el[i].offsetHeight;
+				el[i].onscroll = () => {
+					const scrollTop = el[i].scrollTop;
+					const scrollHeight = el[i].scrollHeight;
+					if ((el[i].offsetHeight + scrollTop) - scrollHeight >= -1) {
+						// 需要执行的代码
+						console.log("aa")
+            this.getPapers();
+					}
+				}
       }
-  })
+		})
+
   }
 }
 </script>

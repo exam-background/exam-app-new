@@ -37,21 +37,8 @@ export default {
   created() {
     this.detailId = this.$route.params.papersId
     this.$nextTick ( () => {
-      alert(this.$route.params.active)
-      // alert(this.detailId)
-      if(this.$route.params.id == 1){
-        this.$axios
-        .get(this.$location.getJobDayExerciseById, {params: {id: this.detailId}})
-        .then(response => {
-          this.exercise = response.data.data;
-          console.log("就业训练查询结果---->" + JSON.stringify(this.exercise));
-        })
-        .catch(function(error) {
-          // 请求失败处理
-          console.log("就业训练请求处理失败");
-          console.log(error);
-        });
-      }else{
+      // alert(this.$route.params.active)
+      if(this.$route.params.active == 0){
         this.$axios
         .get(this.$location.getTechnologyDayExerciseById, {params: {id: this.detailId}})
         .then(response => {
@@ -61,6 +48,18 @@ export default {
         .catch(function(error) {
           // 请求失败处理
           console.log("技术训练请求处理失败");
+          console.log(error);
+        });
+      }else{
+        this.$axios
+        .get(this.$location.getJobDayExerciseById, {params: {id: this.detailId}})
+        .then(response => {
+          this.exercise = response.data.data;
+          console.log("就业训练查询结果---->" + JSON.stringify(this.exercise));
+        })
+        .catch(function(error) {
+          // 请求失败处理
+          console.log("就业训练请求处理失败");
           console.log(error);
         });
       }
@@ -78,7 +77,7 @@ export default {
       .then(() => {
         let token = localStorage.getItem("stuToken");
         let id = token.split('-')[2]
-        if(this.$route.params.id == 1){
+        if(this.$route.params.active == 1){
           this.$axios
           .post(this.$location.addJobDayExerciseSubmit, this.$qs.stringify({
             studentId: id,
@@ -91,7 +90,7 @@ export default {
               }).then(() => {
                 // on close
               });
-              location.href="home1/first1";
+              location.href="first1";
           })
           .catch(function(error) {
             // 请求失败处理
@@ -110,7 +109,7 @@ export default {
               title: '提示',
               message: "答题成功",
             }).then(() => {
-              location.href="/home1/first1"
+              location.href="first1"
             });
           })
           .catch(function(error) {
