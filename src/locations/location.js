@@ -2,6 +2,7 @@
 var examsystemPath = 'http://localhost:8081/examsystem'
 
 const location ={
+  luyin : examsystemPath + "/luyin",
 	getJiShuCount : examsystemPath+"/getJiShuCount",
 	getStudentByClassId : examsystemPath+"/getStudentByClassId",
 	getJiaoClass : examsystemPath +"/getJiaoClass",
