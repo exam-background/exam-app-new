@@ -14,6 +14,10 @@
         <div v-else>
             <textarea class="details-textarea" v-model="addExercise.submitAnswer"></textarea>
         </div>
+        <div 
+        @click="luyinFun"
+         style="width:32px;height: 32px;border:2px dotted #a668e6;border-radius:32px;margin: 0 auto;text-align: center;"><img  width="32px" height="32px" src="../../../assets/yuyin.png" /></div>
+         <div style="margin:0 auto; width:50px;text-align:center;">{{luyin}}</div>
       <div class="details-button" ><button @click="insertExercise">完成</button></div>
     </div>
   </div>
@@ -21,6 +25,8 @@
 
 <script>
 import { Dialog } from 'vant';
+import Recorder from "js-audio-recorder";
+let recorder = new Recorder();
 export default {
   data(){
     return{
@@ -31,7 +37,9 @@ export default {
         studentId: '',
         exerciseId: '',
         submitAnswer: ''
-      }]
+      }],
+      luyin:'语音',
+      luyinBoolean:true
     }
   },
   created() {
@@ -67,6 +75,40 @@ export default {
     // console.log(this.$route.params.active,this.$route.params.id,this.$route.params.listId)
   },
   methods: {
+    luyinFun(){
+      let that = this;
+      if(that.luyinBoolean){
+        that.luyin = "请讲话";
+         Recorder.getPermission().then(() => {
+        //alert('开始录音')
+        recorder.start() // 开始录音
+      }, (error) => {
+        alert('请先允许该网页使用麦克风')
+        alert(error.message)
+      })
+      recorder.onprocess = function (duration) {
+        console.log(duration);
+      };
+      }else{
+        that.luyin = "识别中";
+         console.log(recorder.getWAVBlob());
+      recorder.stop(); // 结束录音
+        let param = new FormData(); //创建form对象
+        param.append('file',recorder.getWAVBlob());//通过append向form对象添加数据
+        console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+        let config = {
+          headers:{'Content-Type':'multipart/form-data'}
+        }; //添加请求头
+        that.$axios.post(this.$location.luyin,param,config)
+          .then(response=>{
+            console.log(response.data);
+            that.addExercise.submitAnswer = (undefined == that.addExercise.submitAnswer ? '':that.addExercise.submitAnswer) + response.data;
+            //alert(that.addExercise.submitAnswer);
+            that.luyin = "语音";
+          })
+      }
+      that.luyinBoolean = !that.luyinBoolean;
+    },
     back(){
       this.$router.go(-1)
     },
