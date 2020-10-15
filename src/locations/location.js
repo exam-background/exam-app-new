@@ -1,5 +1,5 @@
 //考核
-var examsystemPath = 'http://139.9.169.87:8081/examsystem'
+var examsystemPath = 'http://localhost:8081/examsystem'
 
 const location ={
   luyin : examsystemPath + "/luyin",

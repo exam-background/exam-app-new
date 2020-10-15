@@ -14,7 +14,7 @@
 
       </div>
       <div>
-        <span v-if="papers.type == 0" style="margin-left:5px;">就业训练</span>
+        <span v-if="papers.types == 0" style="margin-left:5px;">就业训练</span>
         <span v-else style="margin-left:5px;">技术训练</span>
         <span style="margin-left:5px;">{{papers.professional.professionalName}}</span>
       </div>
@@ -22,7 +22,7 @@
     <div class="examine-body">
       <div v-for="(item,index) in papers.papersTitleList" :key="index" class="examine-body-type">
         <div>{{index+1}}.{{item.title}}({{item.setScore}}/{{papers.papersUserResultList[index].mark}}分)<span style="margin-left:5px;"></span></div>
-        <div v-if="item.type == 1">
+        <div v-if="item.types == 1">
             <textarea class="txt1" v-model="insertPapers[index].userExercise" disabled></textarea>
         </div>
         <div v-else>

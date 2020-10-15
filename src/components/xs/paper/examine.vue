@@ -20,7 +20,7 @@
     <div class="examine-body">
       <div v-for="(item,index) in papers.papersTitleList" :key="index" class="examine-body-type">
         <div>{{index+1}}.{{item.title}}({{item.setScore}}分)</div>
-        <div v-if="item.type == 1">
+        <div v-if="item.types == 1">
             <textarea class="txt1" v-model="insertPapers[index].userExercise"></textarea>
         </div>
         <div v-else>
